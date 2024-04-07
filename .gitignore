@@ -1,0 +1,13 @@
+*.pyc
+__pycache__
+.history
+*.html
+venv/
+venv/*
+.vscode
+*.csv
+*.parquet
+*.parquet
+.data/
+.data/*
+*.pkl
