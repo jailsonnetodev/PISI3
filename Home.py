@@ -11,7 +11,7 @@ st.write('''<p> Neste trabalho será desenvolvido um modelo de predição de pre
     ''', unsafe_allow_html=True)
 
 if "data" not in st.session_state:
-    data = pd.read_price_cars.csv('data\price_cars.csv')
+    data = pd.read_csv('data/price_cars.csv')
     st.session_state["data"]=data
 
 
@@ -29,7 +29,7 @@ st.markdown(f'''
             <li>Metricas</li>
             <li>Comparando modelos</li>
     </ul>
-    Dataset: <a href="https://www.kaggle.com/datasets/sooyoungher/smoking-drinking-dataset">https://www.kaggle.com/datasets/sooyoungher/smoking-drinking-dataset</a><br>
+    Dataset: <a href="https://www.kaggle.com/datasets/harikrishnareddyb/used-car-price-predictions?resource=download"</a><br>
     Contribuidores:<br>Silas Ribeiro<br>Ronald Barbosa <br>Joao Gabriel Nascimento<br>Jailson Neto <br> Yrlar Kleber
 ''', unsafe_allow_html=True)
 
