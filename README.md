@@ -58,12 +58,13 @@ Baixe o dataset que será usado no projeto: [Car Price Predictions]( https://www
 #### 🧭 Rodando a aplicação web (Frontend)
 
 bash
-
+```
 # Clone este repositório
 $ git clone https://github.com/jailsonnetodev/PISI3.git
 
 # Acesse a pasta do projeto no seu terminal/cmd
 $ cd PISI3
+
 
 # Abra o projeto no VScode
 $ code .
@@ -75,6 +76,8 @@ $ python -m pip install --upgrade pip
 
 # Recomendamos criar um abiente virtual com mesmo nome da pasta do projeto.
 $ python -m venv venv
+# no linux
+$ virtualenv venv
 
 # Instale as dependências
 $ pip install -r requirements.txt
@@ -90,7 +93,7 @@ $ streamlit run Home.py
 # A aplicação será aberta na porta:Local URL: http://localhost:8501
   Network URL: http://192.168.0.103:8501
 
-
+```
 
 ---
 ## Video explicativo
