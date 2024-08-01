@@ -87,6 +87,18 @@ def bar(data, x:str, y:str='', title:str='', mode='group', p:str=''):
     field.markdown(p, unsafe_allow_html=True)
 
 
+def line_graph(data, x:str, y:str='', title:str='', p:str=''):
+    if y=='':
+        fig_bar = px.line(data, x, )
+    else:
+        fig_bar = px.line(data, x, y, )
+    
+    field = st.container()
+    field.markdown(f'### {title}')
+    field.plotly_chart(fig_bar)
+    field.markdown(p, unsafe_allow_html=True)
+
+
 
 #plotagem de graficos genericos, informe o tipo de grafico e separação de cores
 def select_chart(
