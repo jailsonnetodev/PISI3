@@ -89,3 +89,8 @@ bar(
     x='marca',
     y='media_preco'
 )
+hist(
+    data=data,
+    x='preco',
+    p="""<p>De acordo com gráfico os preços tem variação entre 13k e 26k dólares</p>"""
+)
