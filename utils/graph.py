@@ -119,7 +119,6 @@ def select_chart(
       index=0,
       label_visibility='hidden'
     )
-
   with col2:
     st.write('Escolha a opção de cores')
     color = st.selectbox(
