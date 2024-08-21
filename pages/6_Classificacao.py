@@ -32,12 +32,6 @@ def confusion_graph(y_test, previsao, method:str = ''):
       cm.loc[true_label, predicted_label] += 1
   st.table(cm)
 
-
-# def matrix(x_training, x_test, y_training, y_test, mtd):
-#   cm = ConfusionMatrix(mtd)
-#   cm.fit(x_training, y_training)
-#   cm_score = cm.score(x_test, y_test)
-#   sty.st_yellowbrick(cm_score)
   
 
 def naive_bayes(
