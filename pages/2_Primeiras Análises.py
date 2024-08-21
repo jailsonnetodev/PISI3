@@ -6,7 +6,7 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 from utils.build import  top_categories
-
+from utils.graph import *
 
 
 build_header(
