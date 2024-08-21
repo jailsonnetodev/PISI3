@@ -92,10 +92,6 @@ def drop_outliers(df, columns, k=1.5):
 drop_outliers(df,list_outliers,k=1.5)
 
 
-# classes = [0, 13000, 18700, 26990, 47990]
-# labels = ['0 a 13k', '13k a 18k', '18k a 26k', '26k a 47k']
-# intervals = pd.cut(x=df.preco, bins=classes, labels=labels)
-# df['preco_categoria'] = intervals
 
 # Criando faixas de precos
 df['preco_intervalo'] = pd.cut(df['preco'], bins=[1500, 13000, 18000, 26000, 50000, 499500], 

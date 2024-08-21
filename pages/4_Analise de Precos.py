@@ -5,14 +5,14 @@ from utils.build import build_header
 import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
-from utils.graph import boxplot,scatter,treemap,hist,bar,select_chart,line_graph
+from utils.graph import *
 from utils.build import  top_categories
 
 
 
 build_header(
-    title='Prinmeiras Analises',
-    hdr='# PRIMEIRAS ANALISES E VISUALIZACOES',
+    title='Analise Dos Precos',
+    hdr='# ANALISE DOS PRECOS E SUAS CORRELACOES',
     p='''
         <p> Aqui vamos realizar as primeiras observações dos dados e correlações entre algumas variaveis</p>
     '''
@@ -44,22 +44,15 @@ boxplot(
 )
 
 veiculos_anos = data['ano'].value_counts().sort_values().reset_index(name='Total')
-st.write(px.bar(veiculos_anos, x='ano',y='Total'))
 
 
-
-
-
-# #grafico de barras
-data_ano = data.groupby(['ano'])['preco'].size().reset_index()
 bar(
-    title='GRAFICO DE BARRAS, PRECO X ANO',
-    data = data_ano,
+    data= veiculos_anos,
     x='ano',
-    y='preco',
-    p=''' <p> Observamos que os precos dos veiculos tendem a ser mais caros com a variacao de ano entre 2014 e 2016</p>'''
+    y='Total',
+    title='Total de veiculos x Ano de Fabricacao',
+    p=''' Analise aqui'''
 )
-
 
 
 
@@ -89,3 +82,4 @@ bar(
     x='marca',
     y='media_preco'
 )
+
