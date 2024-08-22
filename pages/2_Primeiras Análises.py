@@ -1,76 +1,51 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils.build import build_header
 import plotly.express as px
-import seaborn as sns
-import matplotlib.pyplot as plt
-from utils.build import  top_categories
-from utils.graph import *
-
+from utils.build import build_header
+from utils.graph import boxplot, scatter, hist
 
 build_header(
-    title='Prinmeiras Analises',
-    hdr='# PRIMEIRAS ANALISES E VISUALIZACOES',
-    p='''
-        <p> Aqui vamos realizar as primeiras observações dos dados e correlações entre algumas variaveis</p>
-    '''
+    title='Primeiras Análises',
+    hdr='# PRIMEIRAS ANÁLISES E VISUALIZAÇÕES',
+    p='<p>Aqui vamos realizar as primeiras observações dos dados e correlações entre algumas variáveis.</p>'
 )
-
 
 data = pd.read_parquet('data/price_cars_copy.parquet')
 
-
-col1,_,col3 = st.columns(3)
+col1, _, col3 = st.columns(3)
 st.divider()
-lin = data.shape[0]
-col = data.shape[1]
-col1.metric("Registros",lin)
-col3.metric("Colunas",col)
 
+num_registros = data.shape[0]
+num_colunas = data.shape[1]
+col1.metric("Registros", num_registros)
+col3.metric("Colunas", num_colunas)
 
-price_by_years = data.groupby(by='Year')['Price'].mean()
-price_by_years = pd.DataFrame(price_by_years).reset_index()
-arr = np.array(price_by_years['Year'])
-fig = px.line(data_frame=price_by_years,x='Year',y='Price')
+price_by_years = data.groupby(by='Year')['Price'].mean().reset_index()
+fig_price_by_years = px.line(price_by_years, x='Year', y='Price', title='Preço Médio por Ano')
+st.plotly_chart(fig_price_by_years)
 
-fig
+st.subheader('Distribuição dos Preços')
+boxplot(data=data, x='Price')
+st.pyplot()
 
+st.subheader('Preço vs Quilometragem')
+scatter(data=data, x='Price', y='Mileage', title='Gráfico de Preço x Quilometragem')
+st.pyplot()
 
-boxplot(
-    data= data,
-    x='Price',
-    
-)
-scatter(
-    data=data,
-    x= 'Price',
-    title='grafico de preco x quilometragem',
-    y='Mileage'
-)
+st.subheader('Distribuição dos Preços (até R$100.000)')
+filtered_prices = data[data['Price'] < 100000]['Price']
+hist(data=filtered_prices, x='Price')
+st.pyplot()
 
-x = data[data.Price < 100000].Price
-hist(
-    data=data,
-    x='Price'
-)
+st.subheader('Número de Veículos por Ano')
+veiculos_anos = data['Year'].value_counts().sort_index().reset_index(name='Total')
+fig_veiculos_anos = px.bar(veiculos_anos, x='index', y='Total', labels={'index': 'Ano', 'Total': 'Número de Veículos'}, title='Número de Veículos por Ano')
+st.plotly_chart(fig_veiculos_anos)
 
-
-veiculos_anos = data['Year'].value_counts().sort_values().reset_index(name='Total')
-fig2 = px.bar(veiculos_anos, x='Year',y='Total')
-fig2
-
-
-
-
-
-categorics_size = data.groupby(['Make']).size()
-categorics_means = data.groupby('Make')['Price'].mean()
-categorics_total = categorics_size.reset_index(name="Total")
-categorics_sorted = categorics_total.sort_values(by='Total', ascending=False)
-
-
-
-# temos uma concentracao maior de carros nas marcas populares conm ford chevrolet nissan, honda 
-fig3 = px.bar(categorics_sorted,x='Make',y='Total')
-fig3
+st.subheader('Número de Veículos por Marca')
+categorics_size = data['Make'].value_counts().reset_index(name='Total')
+categorics_size.columns = ['Marca', 'Total']
+categorics_sorted = categorics_size.sort_values(by='Total', ascending=False)
+fig_categorics = px.bar(categorics_sorted, x='Marca', y='Total', title='Número de Veículos por Marca')
+st.plotly_chart(fig_categorics)
