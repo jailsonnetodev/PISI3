@@ -190,3 +190,57 @@ traducoes = {
 
 # Renomear as colunas usando o dicionário de traduções
 df = df.rename(columns=traducoes)
+
+#OBTENDO TODAS AS COLUNAS NUMERICAS
+
+
+def get_numeric_columns(df):
+    # Seleciona colunas que são do tipo int64 ou float64
+    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    return numeric_columns
+
+col_numerics = get_numeric_columns(df)
+
+
+#DEFININDO COLUNAS QUE MESMO TENDO VALORES DISCREPANTES SERAO MANTIDOS POIS SE TRATAM DE OUTLIERS NATURAIS E SERA REPROCESSADO NO MODELO COM E SEM
+exclude_outliers = ['maximo_assentos','dias_no_mercado','qtd_proprietarios','avaliacao_vendedor']
+
+
+#REDEFININDO AS COLUNAS QUE SERAO APLICADAS A FUNÇÃO DE TRTAMENTO DE OUTLIERS
+new_col_numerics = [ col for col in col_numerics if col not in exclude_outliers]
+
+
+#APLICANDO OUTLIERS
+
+def drop_outliers(df, columns, k=1.5):
+    for column in columns:
+        q1 = df[column].quantile(0.25)
+        q3 = df[column].quantile(0.75)
+        iqr = q3 - q1
+        df[column] = df[column].clip(lower=q1 - k * iqr, upper=q3 + k * iqr)
+    return df
+drop_outliers(df,new_col_numerics,k=1.5)
+
+
+#CRIANDO A CATEGORIA DIAS_NO_MERCADO_LABEL PARA USAR NA CLASSIFICAÇÃO
+
+def categorizar_daysonmarket(df):
+    bins = [0, 36, 83, 185, 365, float('inf')]
+    labels = ['Muito Rápido', 'Rápido', 'Moderado', 'Lento', 'Extremamente Lento']
+    df['dias_no_mercado_label'] = pd.cut(df['dias_no_mercado'], bins=bins, labels=labels, right=False)
+    return df
+
+df = categorizar_daysonmarket(df)
+
+
+
+
+#TRATANDO AS COLUNAS BOLEANAS ATRIBUNDO 0 E 1 NOS VALORES FALSE E TRUE PARA AJUSTAR CONFORME A APLICAÇÃO DO LABEL ENCODER
+
+def tratar_booleans(df):
+    col_bool = df.select_dtypes(include=[bool]).columns
+    df[col_bool] = df[col_bool].astype(int)
+
+    return df
+
+df = tratar_booleans(df)
