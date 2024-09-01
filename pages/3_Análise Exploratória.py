@@ -34,6 +34,3 @@ def open_profile(path):
 
 
 open_profile('price_cars.html')
-
-
-
