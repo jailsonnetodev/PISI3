@@ -182,6 +182,26 @@ traducoes = {
 # Renomear as colunas usando o dicionário de traduções
 df = df.rename(columns=traducoes)
 
+
+def categorizar_daysonmarket(df):
+    bins = [0, 36, 83, 185, 365, float('inf')]
+    labels = ['ate-36 dias', '36-83 dias', '83-185 dias', '185-365 dias', '> 365 dias']
+    df['dias_no_mercado_label'] = pd.cut(df['dias_no_mercado'], bins=bins, labels=labels, right=False)
+    return df
+    
+df = categorizar_daysonmarket(df)
+
+
+
+def tratar_booleans(df):
+    col_bool = df.select_dtypes(include=[bool]).columns
+    df[col_bool] = df[col_bool].astype(int)
+
+    return df
+
+df = tratar_booleans(df)
+
+
 #OBTENDO TODAS AS COLUNAS NUMERICAS
 
 
@@ -203,7 +223,7 @@ new_col_numerics = [ col for col in col_numerics if col not in exclude_outliers]
 
 #APLICANDO OUTLIERS
 
-def drop_outliers(df, columns, k=1.5):
+def drop_outliers(df, columns, k=1.5,):
     for column in columns:
         q1 = df[column].quantile(0.25)
         q3 = df[column].quantile(0.75)
@@ -213,25 +233,7 @@ def drop_outliers(df, columns, k=1.5):
 drop_outliers(df,new_col_numerics,k=1.5)
 
 
-#CRIANDO A CATEGORIA DIAS_NO_MERCADO_LABEL PARA USAR NA CLASSIFICAÇÃO
-
-def categorizar_daysonmarket(df):
-    bins = [0, 36, 83, 185, 365, float('inf')]
-    labels = ['Muito Rápido', 'Rápido', 'Moderado', 'Lento', 'Extremamente Lento']
-    df['dias_no_mercado_label'] = pd.cut(df['dias_no_mercado'], bins=bins, labels=labels, right=False)
-    return df
-
-df = categorizar_daysonmarket(df)
-
-
-
-
-#TRATANDO AS COLUNAS BOLEANAS ATRIBUNDO 0 E 1 NOS VALORES FALSE E TRUE PARA AJUSTAR CONFORME A APLICAÇÃO DO LABEL ENCODER
-
-def tratar_booleans(df):
-    col_bool = df.select_dtypes(include=[bool]).columns
-    df[col_bool] = df[col_bool].astype(int)
-
-    return df
-
-df = tratar_booleans(df)
+df=df.drop('Unnamed: 0', axis=1)
+print(df)
+df.to_parquet('data/dataprocess.parquet')
+data = pd.read_parquet('data/dataprocess.parquet')
