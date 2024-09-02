@@ -16,5 +16,6 @@ build_header(
     p='''
         <p> Aqui vamos realizar as primeiras observações dos dados e correlações entre algumas variaveis</p>
     '''
+
 )
 data = pd.read_parquet('data/price_cars100k.parquet')
