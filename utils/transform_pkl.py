@@ -69,6 +69,7 @@ def save_pkl(
 X_data, y_data = pre_processing(data)
 
 
+
 def main():
   if not(os.path.isfile('data/usedcars_usa.pkl')):
     save_pkl(X_data, y_data,'data/usedcars_usa.pkl')
@@ -78,3 +79,4 @@ main()
 
 with open('data/usedcars_usa.pkl', 'rb') as f:
     X_training, X_test, y_training, y_test = pickle.load(f)
+
