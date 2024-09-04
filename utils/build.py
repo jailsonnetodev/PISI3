@@ -8,6 +8,7 @@ def build_header(hdr: str, title: str, layout='wide',side='auto', p: str=''):
     )
     st.write(hdr)
     st.markdown(p,unsafe_allow_html=True)
+    st.divider()
     
     
 def top_categories(data, top: int, label: str):
