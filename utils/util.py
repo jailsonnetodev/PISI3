@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 import warnings
 import seaborn as sns
 warnings.filterwarnings('ignore')
@@ -7,24 +8,21 @@ import math
 import os
 
 
-def gerar_amostra_parquet(file_path, parquet_path, num_amostras=100000):
-    if os.path.exists(parquet_path):
-        print(f"O arquivo Parquet '{parquet_path}' já existe.")
+def gerar_amostra(file_path,amostra, num_amostras=100000):
+    if os.path.exists(amostra):
+        print(f"O arquivo Parquet '{amostra}' já existe.")
     else:
-        print(f"Gerando amostra de {num_amostras} registros e salvando como Parquet...")
+        print(f"Gerando amostra de {num_amostras} registros e salvando como {amostra}...")
         df = pd.read_csv(file_path, low_memory=False, skiprows=lambda i: i > 0 and i % (3000000 // num_amostras) != 0)
-        df.to_parquet(parquet_path)
-        df.to_csv(amostra_csv)
-        print(f"Amostra gerada e salva como '{parquet_path}'.")
-        print(f"Amostra gerada e salva como '{amostra_csv}'.")
+        df.to_csv(amostra,index=False)
+        print(f"Amostra gerada e salva como '{amostra}'.")
 
 
 
 file_path = 'data/usedcars_usa.csv'
-parquet_path = 'data/usedcars_usa.parquet'
-amostra_csv = 'data/amostra.csv'
-gerar_amostra_parquet(file_path, parquet_path, num_amostras=100000)
-df = pd.read_csv('data/amostra.csv')
+amostra = 'data/usedcars_usa100k.csv'
+gerar_amostra(file_path, amostra, num_amostras=100000)
+df = pd.read_csv('data/usedcars_usa100k.csv')
 
 
 drop_columns = ['vin','bed','bed_height','bed_length','cabin','combine_fuel_economy','dealer_zip','description','is_certified','is_cpo','is_oemcpo','latitude','listing_id','longitude','main_picture_url','sp_id','trimId','vehicle_damage_category','major_options']
@@ -230,10 +228,18 @@ def drop_outliers(df, columns, k=1.5,):
         iqr = q3 - q1
         df[column] = df[column].clip(lower=q1 - k * iqr, upper=q3 + k * iqr)
     return df
-drop_outliers(df,new_col_numerics,k=1.5)
+df = drop_outliers(df,new_col_numerics,k=1.5)
 
 
-df=df.drop('Unnamed: 0', axis=1)
-print(df)
-df.to_parquet('data/dataprocess.parquet')
-data = pd.read_parquet('data/dataprocess.parquet')
+new_data = df.to_parquet('data/usedcars_usa.parquet')
+
+
+def random_parquet(path: str, num: int) ->None:
+  data = pd.read_parquet(path)
+  new_data = data.sample(num, replace=False)
+  num2 = ''.join(reversed(''.join(reversed(f'{num}')).replace('000','k')))
+  new_data.to_parquet(path.replace('.',f'{num2}.'))
+
+
+for i in [20000,50000,100000]:
+    random_parquet('data/usedcars_usa.parquet',i)
