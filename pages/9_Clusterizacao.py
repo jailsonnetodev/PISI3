@@ -48,3 +48,10 @@ df_scaled = scaler.fit_transform(df_cluster)
 # Aplicar DBSCAN
 dbscan = DBSCAN(eps=0.5, min_samples=5)  # Ajuste eps e min_samples conforme necessário
 clusters_dbscan = dbscan.fit_predict(df_scaled)
+
+# Adicionar os clusters ao dataset original
+df['cluster_dbscan'] = clusters_dbscan
+
+# Contar o número de clusters gerados (-1 é o ruído)
+num_clusters = len(set(clusters_dbscan)) - (1 if -1 in clusters_dbscan else 0)
+print(f"Número de clusters encontrados: {num_clusters}")
