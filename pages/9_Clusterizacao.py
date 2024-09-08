@@ -38,3 +38,6 @@ X_clusters_pca = pca.fit_transform(X_clusters)
 
 graph_clusters = px.scatter(x=X_clusters_pca[:,0], y= X_clusters_pca[:,1], color=labels)
 graph_clusters.show()
+
+colunas_cluster = ['preco', 'quilometragem', 'cavalo_de_potencia', 'consumo_cidade', 'dias_no_mercado']
+df_cluster = df[colunas_cluster]
