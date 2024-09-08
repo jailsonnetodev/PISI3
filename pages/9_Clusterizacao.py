@@ -41,3 +41,6 @@ graph_clusters.show()
 
 colunas_cluster = ['preco', 'quilometragem', 'cavalo_de_potencia', 'consumo_cidade', 'dias_no_mercado']
 df_cluster = df[colunas_cluster]
+
+scaler = StandardScaler()
+df_scaled = scaler.fit_transform(df_cluster)
