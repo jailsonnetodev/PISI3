@@ -55,3 +55,8 @@ df['cluster_dbscan'] = clusters_dbscan
 # Contar o número de clusters gerados (-1 é o ruído)
 num_clusters = len(set(clusters_dbscan)) - (1 if -1 in clusters_dbscan else 0)
 print(f"Número de clusters encontrados: {num_clusters}")
+
+# Avaliar a qualidade dos clusters (somente se houver mais de um cluster)
+if num_clusters > 1:
+    silhouette_avg_dbscan = silhouette_score(df_scaled, clusters_dbscan)
+    print(f"Índice de Silhueta para DBSCAN: {silhouette_avg_dbscan}")
