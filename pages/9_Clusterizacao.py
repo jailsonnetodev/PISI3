@@ -60,3 +60,11 @@ print(f"Número de clusters encontrados: {num_clusters}")
 if num_clusters > 1:
     silhouette_avg_dbscan = silhouette_score(df_scaled, clusters_dbscan)
     print(f"Índice de Silhueta para DBSCAN: {silhouette_avg_dbscan}")
+
+# Visualização dos clusters
+plt.figure(figsize=(8, 6))
+plt.scatter(df['preco'], df['quilometragem'], c=df['cluster_dbscan'], cmap='viridis', marker='o', s=50)
+plt.xlabel('Preço')
+plt.ylabel('Quilometragem')
+plt.title('Clusters usando DBSCAN')
+plt.show()
