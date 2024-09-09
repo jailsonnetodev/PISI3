@@ -45,7 +45,6 @@ df_cluster = df[colunas_cluster]
 scaler = StandardScaler()
 df_scaled = scaler.fit_transform(df_cluster)
 
-# Aplicar DBSCAN
 dbscan = DBSCAN(eps=0.5, min_samples=5)  # Ajuste eps e min_samples conforme necessário
 clusters_dbscan = dbscan.fit_predict(df_scaled)
 
