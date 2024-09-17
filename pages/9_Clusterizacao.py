@@ -75,3 +75,36 @@ print(f'Coeficiente de Silhueta Médio para K-Means: {silhouette_avg:.2f}')
 
 # Cálculo da pontuação de silhueta para cada ponto
 sample_silhouette_values = silhouette_samples(X_standard, cluster_labels)
+
+# 4. Gráfico de Silhueta
+fig, ax = plt.subplots(figsize=(8, 6))
+
+y_lower = 10
+for i in range(optimal_clusters):
+    # Agregar as pontuações de silhueta para as amostras que pertencem ao cluster i
+    ith_cluster_silhouette_values = sample_silhouette_values[cluster_labels == i]
+    ith_cluster_silhouette_values.sort()
+
+    size_cluster_i = ith_cluster_silhouette_values.shape[0]
+    y_upper = y_lower + size_cluster_i
+
+    color = cm.nipy_spectral(float(i) / optimal_clusters)
+    ax.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_cluster_silhouette_values,
+                     facecolor=color, edgecolor=color, alpha=0.7)
+
+    # Rotular o gráfico com o número do cluster no meio
+    ax.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+
+    y_lower = y_upper + 10  # 10 para espaço entre os clusters
+
+ax.set_title("Gráfico de Silhueta para os Clusters K-Means")
+ax.set_xlabel("Valor da Silhueta")
+ax.set_ylabel("Cluster")
+
+# Linha vertical para a média da pontuação de silhueta de todos os valores
+ax.axvline(x=silhouette_avg, color="red", linestyle="--")
+
+ax.set_yticks([])  # Ocultar as etiquetas do eixo y
+ax.set_xticks(np.arange(-0.1, 1.1, 0.2))
+
+plt.show()
