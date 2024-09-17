@@ -46,3 +46,24 @@ def calculate_metrics(model, X_train, X_test, y_train, y_test):
     }
 
     return metrics_train, metrics_test
+def display_metrics(model_name, metrics_train, metrics_test):
+    metrics_df = pd.DataFrame({
+        'Métrica': list(metrics_train.keys()),
+        'Treinamento': list(metrics_train.values()),
+        'Teste': list(metrics_test.values())
+    })
+
+    st.header(f'Métricas do Modelo: {model_name}')
+    st.table(metrics_df)
+
+
+models = {
+    'Random Forest': RandomForestClassifier(),
+    'Decision Tree': DecisionTreeClassifier(),
+    'K-Nearest Neighbors': KNeighborsClassifier()
+}
+
+# Exibindo métricas para cada modelo
+for model_name, model in models.items():
+    metrics_train, metrics_test = calculate_metrics(model, X_training, X_test, y_training, y_test)
+    display_metrics(model_name, metrics_train, metrics_test)
