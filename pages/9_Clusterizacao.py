@@ -45,3 +45,33 @@ fig_elbow.update_layout(title='Método do Cotovelo para Determinação do Númer
                         xaxis_title='Número de Clusters',
                         yaxis_title='Soma dos Quadrados das Distâncias')
 fig_elbow.show()
+
+# 2. Clusterização com K-Means
+optimal_clusters = 4  # Defina o número de clusters com base no método do cotovelo
+kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
+cluster_labels = kmeans.fit_predict(X_standard)
+
+
+# 3. Reduzindo a Dimensionalidade com PCA
+pca = PCA(n_components=3)
+X_pca = pca.fit_transform(X_standard)
+
+
+# Adicionando as componentes principais ao DataFrame
+df_pca = pd.DataFrame(X_pca, columns=['PC1', 'PC2', 'PC3'])
+df_pca['cluster'] = cluster_labels  # Adicionando os rótulos dos cluster
+
+
+# 4. Visualização dos Clusters com scatter_matrix
+fig = px.scatter_matrix(df_pca, dimensions=['PC1', 'PC2', 'PC3'], color='cluster',
+                        title='Matriz de Dispersão dos Clusters usando PCA com K-Means')
+fig.update_traces(diagonal_visible=False)  # Oculta os histogramas da diagonal
+fig.show()
+
+# 3. Cálculo da Pontuação de Silhueta
+silhouette_avg = silhouette_score(X_standard, cluster_labels)
+print(f'Coeficiente de Silhueta Médio para K-Means: {silhouette_avg:.2f}')
+
+
+# Cálculo da pontuação de silhueta para cada ponto
+sample_silhouette_values = silhouette_samples(X_standard, cluster_labels)
