@@ -24,3 +24,33 @@ def features_and_target(data: pd.DataFrame, target: str, columns_drop):
   X_data= data.drop(columns_drop, axis=1)
   y_data= data[target]
   return X_data, y_data
+
+def standard(x_data):
+  scaler = StandardScaler()
+  x_data = scaler.fit_transform(x_data)
+
+  return x_data
+
+
+def onehot_encoder(x_label: np.ndarray, columns: List[int]) -> np.ndarray:
+  onehot = ColumnTransformer(transformers=[(
+    'OneHot', 
+    OneHotEncoder(), 
+    columns,
+    )], remainder='passthrough')
+  x = onehot.fit_transform(x_label).toarray()
+  return x
+
+
+def pre_processing(data):
+  X_data, y_data = features_and_target(data,'dias_no_mercado',columns_drop)
+  le=LabelEncoder()
+  for col in X_data:
+    if X_data[col].dtypes == 'object':
+      X_data[col] = pd.DataFrame(le.fit_transform(X_data[col]))
+
+  X_data = X_data.values
+  y_data = y_data.values
+  X_data = standard(X_data)
+
+  return X_data, y_data
