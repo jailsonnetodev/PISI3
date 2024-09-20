@@ -89,3 +89,48 @@ fig_metrics = px.bar(
     labels={'value': 'Valor', 'variable': 'Métrica'}
 )
 st.plotly_chart(fig_metrics, use_container_width=True)
+# Gráfico de barras para R²
+fig_r2 = px.bar(
+    results_df,
+    x='Modelo',
+    y='R²',
+    title='Comparação do R² por Modelo',
+    labels={'R²': 'Coeficiente de Determinação (R²)'}
+)
+st.plotly_chart(fig_r2, use_container_width=True)
+
+# Exibir gráfico de previsões vs valores reais para o melhor modelo
+melhor_modelo = results_df.loc[results_df['R²'].idxmax()]['Modelo']
+st.header(f'Previsões vs Valores Reais para o Melhor Modelo: {melhor_modelo}')
+
+# Re-treinar o melhor modelo para obter as previsões
+best_model = models[melhor_modelo]
+best_model.fit(X_train_regressor, y_train_regressor)
+y_pred_best = best_model.predict(X_test_regressor)
+
+# Criar um DataFrame para plotagem
+pred_vs_real = pd.DataFrame({
+    'Valores Reais': y_test_regressor,
+    'Previsões': y_pred_best
+})
+
+# Gráfico de dispersão
+fig_pred = px.scatter(
+    pred_vs_real,
+    x='Valores Reais',
+    y='Previsões',
+    trendline='ols',
+    title=f'Previsões vs Valores Reais para {melhor_modelo}',
+    labels={'Valores Reais': 'Valores Reais', 'Previsões': 'Previsões'}
+)
+st.plotly_chart(fig_pred, use_container_width=True)
+
+# Opcional: Download dos resultados
+st.header('Download dos Resultados')
+csv = results_df.to_csv(index=False)
+st.download_button(
+    label="Baixar Métricas como CSV",
+    data=csv,
+    file_name='metricas_modelos_regressao.csv',
+    mime='text/csv',
+)
