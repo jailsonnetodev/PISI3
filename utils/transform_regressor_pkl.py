@@ -54,3 +54,32 @@ def pre_processing(data):
   X_data = standard(X_data)
 
   return X_data, y_data
+
+def save_pkl(
+  x_data: np.ndarray, y_data: np.ndarray, path: str = 'data_regressor.pkl', per: int =0.2, random: int=0
+  )-> None:
+  '''save(x_training, y_training, x_teste, y_teste)'''
+  X_training, X_test, y_training, y_test = train_test_split(
+  x_data, y_data, test_size=per, random_state=random
+    )
+  with open(path, mode='wb') as f:
+    pickle.dump([X_training, X_test, y_training, y_test], f)
+
+  return X_training, X_test, y_training, y_test
+
+X_data_regressor, y_data_regressor = pre_processing(data)
+
+
+
+def main():
+  if not(os.path.isfile('data/usedcars_usa_regressor.pkl')):
+    save_pkl(X_data_regressor, y_data_regressor,'data/usedcars_usa_regressor.pkl')
+  X_training_regressor, X_test_regressor, y_training_regressor, y_test_regressor = save_pkl(X_data_regressor, y_data_regressor,'usedcars_usa_regressor.pkl')
+
+main()
+
+with open('data/usedcars_usa_regressor.pkl', 'rb') as f:
+    X_training_regressor, X_test_regressor, y_training_regressor, y_test_regressor = pickle.load(f)
+
+
+print(data.columns)
