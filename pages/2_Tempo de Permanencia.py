@@ -33,3 +33,11 @@ with col2:
       title='Grafico de Barras da Media de Preco por Marca',
       p='<p></p>'
     )
+group_make =  data.groupby(['nome_marca'])['preco'].mean().reset_index().sort_values(by='preco',ascending=False)
+
+
+
+fig =plt.figure(figsize = (25 , 10))
+sns.heatmap(data.select_dtypes('float' , 'int').corr() , annot = True)
+plt.xticks(rotation = 45);
+st.pyplot(fig)
