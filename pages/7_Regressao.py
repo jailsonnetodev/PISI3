@@ -62,3 +62,30 @@ if not os.path.isfile(data_path):
 
 with open(data_path, 'rb') as f:
     X_train_regressor, X_test_regressor, y_train_regressor, y_test_regressor = pickle.load(f)
+# Exibir uma barra de progresso
+with st.spinner('Avaliando modelos...'):
+    results_df = evaluate_models(models, X_train_regressor, y_train_regressor, X_test_regressor, y_test_regressor)
+
+# Exibir as métricas em uma tabela
+st.header('Métricas de Desempenho dos Modelos')
+st.dataframe(results_df.style.format({
+    'MSE': '{:.2f}',
+    'RMSE': '{:.2f}',
+    'MAE': '{:.2f}',
+    'R²': '{:.4f}'
+}))
+
+# Visualizações com Plotly
+st.header('Comparação das Métricas')
+
+# Gráfico de barras para MSE, RMSE e MAE
+fig_metrics = px.bar(
+    results_df.melt(id_vars='Modelo', value_vars=['MSE', 'RMSE', 'MAE']),
+    x='Modelo',
+    y='value',
+    color='variable',
+    barmode='group',
+    title='Comparação de MSE, RMSE e MAE por Modelo',
+    labels={'value': 'Valor', 'variable': 'Métrica'}
+)
+st.plotly_chart(fig_metrics, use_container_width=True)
