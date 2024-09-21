@@ -34,8 +34,6 @@ with col2:
       p='<p></p>'
     )
 
-
-
 group_make =  data.groupby(['nome_marca'])['preco'].mean().reset_index().sort_values(by='preco',ascending=False)
 
 
@@ -56,7 +54,6 @@ df_acidentes = data.groupby('historico_acidente')['dias_no_mercado'].mean().rese
 fig2 = px.bar(df_acidentes, x='historico_acidente', y='dias_no_mercado',
              title='Impacto de histórico de acidentes no tempo de venda')
 st.plotly_chart(fig2)
-
 
 
 df_cor = data.groupby('cor_exterior')['dias_no_mercado'].mean().reset_index()
@@ -146,4 +143,6 @@ st.write(fig)
 
 
 fig = px.strip(data, x="dias_no_mercado", y="chassi_danificado", orientation="h", color="frota")
+
 st.plotly_chart(fig)
+

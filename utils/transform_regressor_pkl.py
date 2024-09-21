@@ -25,8 +25,6 @@ def features_and_target(data: pd.DataFrame, target: str, columns_drop):
   y_data= data[target]
   return X_data, y_data
 
-
-
 def standard(x_data):
   scaler = StandardScaler()
   x_data = scaler.fit_transform(x_data)
@@ -58,8 +56,6 @@ def pre_processing(data):
   return X_data, y_data
 
 
-
-
 def save_pkl(
   x_data: np.ndarray, y_data: np.ndarray, path: str = 'data_regressor.pkl', per: int =0.2, random: int=0
   )-> None:
@@ -87,4 +83,3 @@ with open('data/usedcars_usa_regressor.pkl', 'rb') as f:
     X_training_regressor, X_test_regressor, y_training_regressor, y_test_regressor = pickle.load(f)
 
 
-print(data.columns)

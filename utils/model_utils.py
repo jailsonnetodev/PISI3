@@ -1,5 +1,3 @@
-# utils/model_utils.py
-
 import os
 import glob
 import pickle
@@ -22,7 +20,7 @@ def delete_pkl_files(model_dirs):
     """
     pkl_files = []
     for dir in model_dirs:
-        pattern = os.path.join(dir, '**', '*.pkl')
+        pattern = os.path.join(dir, '*', '.pkl')
         pkl_files.extend(glob.glob(pattern, recursive=True))
     
     if not pkl_files:
@@ -54,7 +52,7 @@ def backup_and_delete_pkl_files(model_dirs):
 
     pkl_files = []
     for dir in model_dirs:
-        pattern = os.path.join(dir, '**', '*.pkl')
+        pattern = os.path.join(dir, '*', '.pkl')
         pkl_files.extend(glob.glob(pattern, recursive=True))
     
     if not pkl_files:
@@ -224,4 +222,6 @@ def plot_feature_importance(model, feature_names, model_name, X_test=None, y_tes
         height=400
     )
     fig.update_layout(yaxis={'categoryorder':'total ascending'})
+
     st.plotly_chart(fig)
+

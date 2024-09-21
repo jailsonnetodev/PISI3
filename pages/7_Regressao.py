@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
@@ -62,7 +63,6 @@ if not os.path.isfile(data_path):
 
 with open(data_path, 'rb') as f:
     X_train_regressor, X_test_regressor, y_train_regressor, y_test_regressor = pickle.load(f)
-
 # Exibir uma barra de progresso
 with st.spinner('Avaliando modelos...'):
     results_df = evaluate_models(models, X_train_regressor, y_train_regressor, X_test_regressor, y_test_regressor)
@@ -90,7 +90,6 @@ fig_metrics = px.bar(
     labels={'value': 'Valor', 'variable': 'Métrica'}
 )
 st.plotly_chart(fig_metrics, use_container_width=True)
-
 # Gráfico de barras para R²
 fig_r2 = px.bar(
     results_df,
@@ -136,4 +135,3 @@ st.download_button(
     file_name='metricas_modelos_regressao.csv',
     mime='text/csv',
 )
-
