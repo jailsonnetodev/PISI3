@@ -47,3 +47,8 @@ fig = px.line(df_ano, x='ano', y='dias_no_mercado',
               title='Relação entre ano de fabricação e tempo de permanência')
 st.plotly_chart(fig)
 
+df_acidentes = data.groupby('historico_acidente')['dias_no_mercado'].mean().reset_index()
+fig2 = px.bar(df_acidentes, x='historico_acidente', y='dias_no_mercado',
+             title='Impacto de histórico de acidentes no tempo de venda')
+st.plotly_chart(fig2)
+
