@@ -11,7 +11,7 @@ st.write('''<p> Neste trabalho será desenvolvido um modelo de predição de pre
     ''', unsafe_allow_html=True)
 
 if "data" not in st.session_state:
-    data = pd.read_csv('data/price_cars.csv')
+    data = pd.read_parquet('data/usedcars_usa100k.parquet')
     st.session_state["data"]=data
 
 

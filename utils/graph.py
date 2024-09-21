@@ -101,7 +101,7 @@ def line_graph(data, x:str, y:str='', title:str='', p:str=''):
 
 
 #plotagem de graficos genericos, informe o tipo de grafico e separação de cores
-def select_chart(
+def select_graph(
   data: pd.DataFrame, x: str, options: np.ndarray, type_graph, type_txt: str, p: str=''
   ):
 
