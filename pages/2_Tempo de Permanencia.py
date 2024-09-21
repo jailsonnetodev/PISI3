@@ -33,6 +33,7 @@ with col2:
       title='Grafico de Barras da Media de Preco por Marca',
       p='<p></p>'
     )
+
 group_make =  data.groupby(['nome_marca'])['preco'].mean().reset_index().sort_values(by='preco',ascending=False)
 
 
@@ -42,15 +43,18 @@ sns.heatmap(data.select_dtypes('float' , 'int').corr() , annot = True)
 plt.xticks(rotation = 45);
 st.pyplot(fig)
 
+
 df_ano = data.groupby('ano')['dias_no_mercado'].mean().reset_index()
 fig = px.line(df_ano, x='ano', y='dias_no_mercado',
               title='Relação entre ano de fabricação e tempo de permanência')
 st.plotly_chart(fig)
 
+
 df_acidentes = data.groupby('historico_acidente')['dias_no_mercado'].mean().reset_index()
 fig2 = px.bar(df_acidentes, x='historico_acidente', y='dias_no_mercado',
              title='Impacto de histórico de acidentes no tempo de venda')
 st.plotly_chart(fig2)
+
 
 df_cor = data.groupby('cor_exterior')['dias_no_mercado'].mean().reset_index()
 
@@ -139,4 +143,6 @@ st.write(fig)
 
 
 fig = px.strip(data, x="dias_no_mercado", y="chassi_danificado", orientation="h", color="frota")
+
 st.plotly_chart(fig)
+

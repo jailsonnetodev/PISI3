@@ -32,4 +32,6 @@ fig10
 group_ano_km_preco = data.groupby(['ano','quilometragem'])['preco'].mean().reset_index()
 fig12 = px.bar(group_ano_km_preco, x="ano", y=["quilometragem", "preco"], barmode='group',
             title="Total de Veículos e Preço Médio por Ano")
+
 st.plotly_chart(fig12)
+

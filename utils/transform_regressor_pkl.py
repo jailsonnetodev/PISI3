@@ -55,6 +55,7 @@ def pre_processing(data):
 
   return X_data, y_data
 
+
 def save_pkl(
   x_data: np.ndarray, y_data: np.ndarray, path: str = 'data_regressor.pkl', per: int =0.2, random: int=0
   )-> None:
@@ -82,4 +83,3 @@ with open('data/usedcars_usa_regressor.pkl', 'rb') as f:
     X_training_regressor, X_test_regressor, y_training_regressor, y_test_regressor = pickle.load(f)
 
 
-print(data.columns)

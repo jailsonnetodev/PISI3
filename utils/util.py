@@ -1,3 +1,4 @@
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import warnings
@@ -199,7 +200,15 @@ def tratar_booleans(df):
 
 df = tratar_booleans(df)
 
+only_converter_int = ['ano','dias_no_mercado','consumo_cidade','consumo_estrada']
+def convert_to_int(df, colunas):
+    for coluna in colunas:
+        # Converter a coluna para inteiro
+        df[coluna] = df[coluna].astype(int)
+        
+    return df
 
+df = convert_to_int(df, only_converter_int)
 #OBTENDO TODAS AS COLUNAS NUMERICAS
 
 
@@ -212,7 +221,7 @@ col_numerics = get_numeric_columns(df)
 
 
 #DEFININDO COLUNAS QUE MESMO TENDO VALORES DISCREPANTES SERAO MANTIDOS POIS SE TRATAM DE OUTLIERS NATURAIS E SERA REPROCESSADO NO MODELO COM E SEM
-exclude_outliers = ['maximo_assentos','dias_no_mercado','qtd_proprietarios','avaliacao_vendedor']
+exclude_outliers = ['maximo_assentos','dias_no_mercado','qtd_proprietarios','avaliacao_vendedor','frota','chassi_danificado','concessionaria_franqueada','historico_acidente','ee_cabine','ee_novo','recuperado','titulo_roubo']
 
 
 #REDEFININDO AS COLUNAS QUE SERAO APLICADAS A FUNÇÃO DE TRTAMENTO DE OUTLIERS

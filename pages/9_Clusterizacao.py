@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -152,3 +153,4 @@ if selected_columns:
             st.warning('O número de clusters deve ser pelo menos 1.')
 else:
     st.warning('Selecione ao menos uma coluna para realizar a clusterização.')
+

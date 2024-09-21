@@ -12,9 +12,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelEncoder
 
-data = pd.read_parquet('data\dataprocess.parquet')
-
-columns_drop = ['dias_no_mercado','dias_no_mercado_label']
+data = pd.read_parquet('data/usedcars_usa100k.parquet')
+data = data.reset_index()
+columns_drop = ['dias_no_mercado','dias_no_mercado_label','cidade','data_listagem','index']
 # definindo as features e target
 def features_and_target(data: pd.DataFrame, target: str, columns_drop):
   X_data= data.drop(columns_drop, axis=1)
@@ -80,3 +80,5 @@ main()
 with open('data/usedcars_usa.pkl', 'rb') as f:
     X_training, X_test, y_training, y_test = pickle.load(f)
 
+
+print(data.columns)

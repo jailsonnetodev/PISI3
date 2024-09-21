@@ -222,4 +222,6 @@ def plot_feature_importance(model, feature_names, model_name, X_test=None, y_tes
         height=400
     )
     fig.update_layout(yaxis={'categoryorder':'total ascending'})
+
     st.plotly_chart(fig)
+
