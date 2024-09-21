@@ -41,3 +41,9 @@ fig =plt.figure(figsize = (25 , 10))
 sns.heatmap(data.select_dtypes('float' , 'int').corr() , annot = True)
 plt.xticks(rotation = 45);
 st.pyplot(fig)
+
+df_ano = data.groupby('ano')['dias_no_mercado'].mean().reset_index()
+fig = px.line(df_ano, x='ano', y='dias_no_mercado',
+              title='Relação entre ano de fabricação e tempo de permanência')
+st.plotly_chart(fig)
+
