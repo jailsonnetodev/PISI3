@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -10,16 +9,11 @@ import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from sklearn.metrics import silhouette_samples, silhouette_score
-from sklearn.metrics import silhouette_score
-from sklearn.metrics import silhouette_samples, silhouette_score
+import seaborn as sns
 
-# Carregar os dados (substitua pelo seu próprio caminho de arquivo)
 df = pd.read_parquet('data/usedcars_usa.parquet')
-#df = df.drop('Unnamed: 0',axis=1)
-
 
 def processing_data(X):
-            
     categorical_cols = X.select_dtypes(include=['object', 'category']).columns.tolist()
     few_unique = [col for col in categorical_cols if X[col].nunique() <= 10]
     many_unique = [col for col in categorical_cols if X[col].nunique() > 10]
@@ -31,11 +25,9 @@ def processing_data(X):
     X.fillna(0, inplace=True)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-
     return X_scaled
 
 def graph_silhouette(X, optimal_clusters, clusters):
-
     fig, ax = plt.subplots(figsize=(8, 6))
     y_lower = 10
     sample_silhouette_values = silhouette_samples(X, clusters)
@@ -62,7 +54,7 @@ def graph_silhouette(X, optimal_clusters, clusters):
 
 columns = ['espaco_banco_traseiro', 'tipo_carroceria', 'cidade', 'consumo_cidade',
            'cilindros_motor', 'cilindradas_motor', 'tipo_motor', 'cor_exterior', 
-           'frota', 'chassi_danificado', 'dias_no_mercado', 'concessionaria_franqueada', 
+           'frota', 'chassi_danificado', 'concessionaria_franqueada', 
            'marca_da_franquia', 'espaco_banco_dianteiro', 'volume_tanque', 
            'tipo_combustivel', 'historico_acidente', 'altura', 'consumo_estrada', 
            'cavalo_de_potencia', 'cor_interior', 'ee_cabine', 'ee_novo', 
@@ -72,10 +64,11 @@ columns = ['espaco_banco_traseiro', 'tipo_carroceria', 'cidade', 'consumo_cidade
            'avaliacao_vendedor', 'nome_vendedor', 'titulo_roubo', 
            'torque', 'transmissao', 'exibicao_transmissao', 'nome_versao', 
            'sistema_rodas', 'exibicao_sistema_rodas', 'entre_eixos', 
-           'largura', 'ano', 'dias_no_mercado_label']
-
+           'largura', 'ano']  # Removido 'dias_no_mercado' e 'dias_no_mercado_label'
 
 st.title('Clusterização de Veículos')
+
+
 selected_columns = st.multiselect('Selecione as colunas para clusterização:', columns)
 
 if selected_columns:
@@ -84,24 +77,29 @@ if selected_columns:
     else:
         X = df[selected_columns].copy()
         
+    
         X_scaled = processing_data(X)
-        num_clusters = st.slider('Selecione o número de clusters:', min_value=1, max_value=10, value=3)
         
-        if num_clusters >= 1:
+    
+        num_clusters = st.slider('Selecione o número de clusters:', min_value=2, max_value=10, value=3)
+        
+        if num_clusters >= 2:
+            
             kmeans = KMeans(n_clusters=num_clusters, random_state=0)
             clusters = kmeans.fit_predict(X_scaled)
+            
             sse = []
             for k in range(1, 11):
-                kmeans = KMeans(n_clusters=k, random_state=42)
-                kmeans.fit(X_scaled)
-                sse.append(kmeans.inertia_)
+                kmeans_k = KMeans(n_clusters=k, random_state=42)
+                kmeans_k.fit(X_scaled)
+                sse.append(kmeans_k.inertia_)
             fig_elbow = go.Figure(data=go.Scatter(x=list(range(1, 11)), y=sse, mode='lines+markers'))
             fig_elbow.update_layout(title='Método do Cotovelo para Determinação do Número de Clusters',
                         xaxis_title='Número de Clusters',
                         yaxis_title='Soma dos Quadrados das Distâncias')
             st.plotly_chart(fig_elbow)
-            graph_silhouette(X_scaled,num_clusters,clusters)
-            
+    
+            graph_silhouette(X_scaled, num_clusters, clusters)
             
             df['cluster'] = (clusters + 1).astype(int)  
             color_palette = ['yellow', 'blue', 'red', 'green', 'purple', 
@@ -149,8 +147,39 @@ if selected_columns:
                         fig.update_yaxes(tickfont=dict(size=12))
                         
                         cols[j].plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning('O número de clusters deve ser pelo menos 1.')
+            
+            st.subheader('Análise de Dias no Mercado por Cluster')
+            
+            if 'dias_no_mercado' in df.columns:
+            
+                dias_stats = df.groupby('cluster')['dias_no_mercado'].describe().reset_index()
+                st.dataframe(dias_stats)
+                
+                
+                fig_box = px.box(df, x='cluster', y='dias_no_mercado', color='cluster',
+                                title='Distribuição de Dias no Mercado por Cluster',
+                                labels={'cluster': 'Cluster', 'dias_no_mercado': 'Dias no Mercado'},
+                                boxmode='group')
+                st.plotly_chart(fig_box)
+                
+                
+                mean_days = df.groupby('cluster')['dias_no_mercado'].mean().reset_index()
+                fig_bar = px.bar(mean_days, x='cluster', y='dias_no_mercado', 
+                                 title='Média de Dias no Mercado por Cluster',
+                                 labels={'cluster': 'Cluster', 'dias_no_mercado': 'Média de Dias no Mercado'},
+                                 color='dias_no_mercado',
+                                 color_continuous_scale='Blues')
+                st.plotly_chart(fig_bar)
+                
+                
+                st.subheader('Boxplot de Dias no Mercado por Cluster')
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.boxplot(x='cluster', y='dias_no_mercado', data=df, palette=color_palette[:num_clusters], ax=ax)
+                ax.set_title('Distribuição de Dias no Mercado por Cluster')
+                ax.set_xlabel('Cluster')
+                ax.set_ylabel('Dias no Mercado')
+                st.pyplot(fig)
+            else:
+                st.warning('A coluna "dias_no_mercado" não está presente no DataFrame para análise.')
 else:
     st.warning('Selecione ao menos uma coluna para realizar a clusterização.')
-
