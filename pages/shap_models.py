@@ -43,3 +43,12 @@ feature_names = [
     'nome_versao', 'sistema_rodas', 'exibicao_sistema_rodas', 'entre_eixos',
     'largura', 'ano'
 ]
+# Verificar se o número de features corresponde
+if X_train.shape[1] == len(feature_names):
+    X_train_df = pd.DataFrame(X_train, columns=feature_names)
+    X_test_df = pd.DataFrame(X_test, columns=feature_names)
+else:
+    st.error(
+        f"O número de features no X_train ({X_train.shape[1]}) não corresponde ao número de nomes de features ({len(feature_names)})."
+    )
+    st.stop()
