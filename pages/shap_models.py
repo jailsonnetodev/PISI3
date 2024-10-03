@@ -135,4 +135,37 @@ def plot_feature_importance_plotly(importance_df, model_name):
     )
     fig.update_layout(yaxis={'categoryorder': 'total ascending'})
     st.plotly_chart(fig, use_container_width=True)
+    
+# Processamento e exibição das análises
+for model_name in selected_models:
+    model = trained_models[model_name]
+    st.header(f'Análise SHAP para {model_name}')
 
+    # Selecionar tipo de explainer
+    if model_name in ['Random Forest', 'Decision Tree']:
+        explainer_type = 'Tree'
+    else:
+        explainer_type = 'Kernel'
+
+    # Selecionar amostras para SHAP
+    X_sample = X_train_df.sample(n=sample_size, random_state=42)
+
+    try:
+        with st.spinner(f'Calculando SHAP para {model_name}...'):
+            shap_values = compute_shap_values(model, explainer_type, X_sample)
+
+        if shap_values is None:
+            st.error(f'Explainer do tipo "{explainer_type}" não é suportado para {model_name}.')
+            continue
+
+        importance_df = calculate_mean_shap_importance(shap_values, X_train_df.columns)
+
+        # Plotando a importância das características
+        plot_feature_importance_plotly(importance_df, model_name)
+
+    except Exception as e:
+        st.error(f"Erro ao calcular SHAP para {model_name}: {e}")
+
+st.write(
+    '*Nota:* A análise de SHAP pode ser intensiva em termos de computação. Reduza o número de amostras se estiver enfrentando problemas de performance.'
+)
