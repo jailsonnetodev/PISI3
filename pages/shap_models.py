@@ -86,3 +86,11 @@ sample_size = st.sidebar.slider(
     value=200,
     step=100
 )
+# Informações sobre SHAP
+st.sidebar.info(
+    'SHAP (SHapley Additive exPlanations) é uma técnica para interpretar modelos de machine learning, atribuindo a cada feature uma importância para a previsão.'
+)
+
+if not selected_models:
+    st.sidebar.error("Por favor, selecione pelo menos um modelo para análise.")
+    st.stop()
