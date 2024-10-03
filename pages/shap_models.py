@@ -24,3 +24,22 @@ def load_data(data_path='data/usedcars_usa.pkl'):
     with open(data_path, 'rb') as f:
         X_training, X_test, y_training, y_test = pickle.load(f)
     return X_training, X_test, y_training, y_test
+    # Carregar os dados
+X_train, X_test, y_train, y_test = load_data()
+
+# Definir os nomes das features (substitua pela sua lista real de nomes de features)
+feature_names = [
+    'espaco_banco_traseiro', 'tipo_carroceria', 'consumo_cidade',
+    'cilindros_motor', 'cilindradas_motor', 'tipo_motor',
+    'cor_exterior', 'frota', 'chassi_danificado',
+    'concessionaria_franqueada', 'marca_da_franquia',
+    'espaco_banco_dianteiro', 'volume_tanque', 'tipo_combustivel',
+    'historico_acidente', 'altura', 'consumo_estrada', 'cavalo_de_potencia',
+    'cor_interior', 'ee_cabine', 'ee_novo', 'comprimento',
+    'cor_listagem', 'nome_marca', 'maximo_assentos', 'quilometragem',
+    'nome_modelo', 'qtd_proprietarios', 'potencia', 'preco', 'recuperado',
+    'valor_economizado', 'avaliacao_vendedor', 'nome_vendedor',
+    'titulo_roubo', 'torque', 'transmissao', 'exibicao_transmissao',
+    'nome_versao', 'sistema_rodas', 'exibicao_sistema_rodas', 'entre_eixos',
+    'largura', 'ano'
+]
