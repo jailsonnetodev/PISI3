@@ -52,3 +52,17 @@ else:
         f"O número de features no X_train ({X_train.shape[1]}) não corresponde ao número de nomes de features ({len(feature_names)})."
     )
     st.stop()
+# Função para treinar modelos com caching
+@st.cache_resource
+def train_models(X_train, y_train):
+    models = {
+        'Random Forest': RandomForestClassifier(n_estimators=100, random_state=42),
+        'Decision Tree': DecisionTreeClassifier(random_state=42),
+        'KNN': KNeighborsClassifier(n_neighbors=5)
+    }
+    trained_models = {}
+    for name, model in models.items():
+        st.write(f'Treinando {name}...')
+        model.fit(X_train, y_train)
+        trained_models[name] = model
+    return trained_models
