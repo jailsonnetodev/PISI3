@@ -66,3 +66,23 @@ def train_models(X_train, y_train):
         model.fit(X_train, y_train)
         trained_models[name] = model
     return trained_models
+# Treinar os modelos
+trained_models = train_models(X_train_df, y_train)
+
+# Seção de seleção de modelos
+st.sidebar.header('Selecione os Modelos para Análise de SHAP')
+selected_models = st.sidebar.multiselect(
+    'Modelos',
+    options=list(trained_models.keys()),
+    default=list(trained_models.keys())
+)
+
+# Seleção do número de amostras para SHAP
+st.sidebar.header('Configurações SHAP')
+sample_size = st.sidebar.slider(
+    'Número de amostras para SHAP',
+    min_value=100,
+    max_value=1000,
+    value=200,
+    step=100
+)
