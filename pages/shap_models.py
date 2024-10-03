@@ -94,3 +94,45 @@ st.sidebar.info(
 if not selected_models:
     st.sidebar.error("Por favor, selecione pelo menos um modelo para análise.")
     st.stop()
+# Função para calcular SHAP e limitar o número de amostras com caching
+@st.cache_data
+def compute_shap_values(_model, explainer_type, X_sample):
+    if explainer_type == 'Tree':
+        explainer = shap.TreeExplainer(_model)
+        shap_values = explainer.shap_values(X_sample)
+    elif explainer_type == 'Kernel':
+        # Limitar o número de amostras para KernelExplainer
+        background = shap.sample(X_sample, 100, random_state=42)
+        explainer = shap.KernelExplainer(_model.predict_proba, background)
+        # Limitar ainda mais as amostras para KNN
+        shap_values = explainer.shap_values(X_sample[:100])
+    else:
+        shap_values = None
+    return shap_values
+
+# Função para calcular a importância média absoluta das características
+def calculate_mean_shap_importance(shap_values, feature_names):
+    if isinstance(shap_values, list):
+        # Para classificação binária, usar apenas a classe positiva (assumindo que é a segunda classe)
+        shap_values = shap_values[1]
+    mean_shap_importance = np.abs(shap_values).mean(axis=0)
+    importance_df = pd.DataFrame({
+        'feature': feature_names,
+        'importance': mean_shap_importance
+    }).sort_values(by='importance', ascending=False)
+    return importance_df
+
+# Função para plotar a importância usando Plotly no Streamlit
+def plot_feature_importance_plotly(importance_df, model_name):
+    fig = px.bar(
+        importance_df,
+        x='importance',
+        y='feature',
+        orientation='h',
+        title=f'Importância das Features - {model_name}',
+        labels={'importance': 'Importância', 'feature': 'Feature'},
+        height=600
+    )
+    fig.update_layout(yaxis={'categoryorder': 'total ascending'})
+    st.plotly_chart(fig, use_container_width=True)
+
