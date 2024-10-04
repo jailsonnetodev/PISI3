@@ -6,7 +6,7 @@
 
 ## 💻 Sobre o Projeto
 
-Este projeto academico foi desenvolvido com objetivo de aplicar os conhecimentos de analise exploratoria de dados com metodos estatisticos e algoritimos de machine learning, o dataset predict_car_used que esta hospedado no site kaggle.com/datasets, [Car Price Predictions]( https://www.kaggle.com/datasets/harikrishnareddyb/used-car-price-predictions) foi selecionado e tratado para obter o melhor resultado dos algoritimos. O objetivo do projeto é buscar uma relação entre os atributos para prever o preço do veiculo mais justo e competitivo dentre o seguimento na venda de usados.
+Este projeto academico foi desenvolvido com objetivo de aplicar os conhecimentos de analise exploratoria de dados com metodos estatisticos e algoritimos de machine learning, o dataset predict_car_used que esta hospedado no site kaggle.com/datasets, [Car Price Predictions]( https://www.kaggle.com/datasets/ananaymital/us-used-cars-dataset/data) foi selecionado e tratado para obter o melhor resultado dos algoritimos. O objetivo do projeto é buscar uma relação entre os atributos para prever o preço do veiculo mais justo e competitivo dentre o seguimento na venda de usados.
 
 Tabela de Conteúdos
 =================
@@ -51,7 +51,7 @@ Este projeto foi desenvolvido e executado no servidor Streamlit:  [Web App(strea
 
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
 [Python](https://www.python.org/downloads/) e um editor de código [VSCode](https://code.visualstudio.com/).
-Baixe o dataset que será usado no projeto: [Car Price Predictions]( https://www.kaggle.com/datasets/harikrishnareddyb/used-car-price-predictions), salve na pasta do projeto gp5/data e renomeie o arquivo para price_cars.
+Baixe o dataset que será usado no projeto: [Car Price Predictions]( https://www.kaggle.com/datasets/ananaymital/us-used-cars-dataset/data), salve na pasta do projeto gp5/data e renomeie o arquivo para price_cars.
 
 
 
