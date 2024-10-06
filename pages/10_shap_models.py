@@ -1,60 +1,53 @@
+import streamlit as st
 import shap
-import plotly.express as px
+import pickle
+import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
 
-# Exemplo: usando dados de treinamento
-# X_train = suas_features_de_treinamento
-# y_train = seu_target_de_treinamento
 
-# Treinando o Random Forest
-rf = RandomForestClassifier()
-rf.fit(X_training, y_training)
+def load_data(data_path):
+    with open(data_path, 'rb') as file:
+        X_training, X_test, y_training, y_test = pickle.load(file)
+    return X_training, X_test, y_training, y_test
 
-# Treinando a Decision Tree
-dt = DecisionTreeClassifier()
-dt.fit(X_training, y_training)
+def load_model(model_path):
+    with open(model_path, 'rb') as file:
+        return pickle.load(file)
 
-# Treinando o KNN
-knn = KNeighborsClassifier()
-knn.fit(X_training, y_training)
+def plot_shap_beeswarm(model, X_test, model_type):
+    if model_type in ['RandomForest', 'DecisionTree']:
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer.shap_values(X_test)
+    elif model_type == 'KNN':
+        explainer = shap.KernelExplainer(model.predict, X_test)
+        shap_values = explainer.shap_values(X_test)
+    
+    st.write(f"Beeswarm Plot para o modelo {model_type}")
+    fig, ax = plt.subplots()
+    shap.summary_plot(shap_values, X_test, plot_type="beeswarm", show=False)
+    st.pyplot(fig)
 
-# Calculando valores SHAP para Random Forest
-explainer_rf = shap.TreeExplainer(rf)
-shap_values_rf = explainer_rf.shap_values(X_training)
+st.title('Visualização SHAP para Modelos')
 
-# Calculando valores SHAP para Decision Tree
-explainer_dt = shap.TreeExplainer(dt)
-shap_values_dt = explainer_dt.shap_values(X_training)
 
-# Para KNN, usamos KernelExplainer
-explainer_knn = shap.KernelExplainer(knn.predict_proba, X_training)
-shap_values_knn = explainer_knn.shap_values(X_training)
+data_path = 'data/usedcars_usa.pkl'
+X_training, X_test, y_training, y_test = load_data(data_path)
 
-# Função para calcular a importância média absoluta das características
-def calculate_mean_shap_importance(shap_values, feature_names):
-    mean_shap_importance = np.abs(shap_values).mean(axis=0)
-    importance_df = pd.DataFrame({
-        'feature': feature_names,
-        'importance': mean_shap_importance
-    }).sort_values(by='importance', ascending=False)
-    return importance_df
+st.write("Dados de teste carregados com sucesso!")
+st.write("Exemplo de X_test:")
 
-# Calculando a importância média das características
-rf_importance_df = calculate_mean_shap_importance(shap_values_rf[1], X_training.columns)
-dt_importance_df = calculate_mean_shap_importance(shap_values_dt[1], X_training.columns)
-knn_importance_df = calculate_mean_shap_importance(shap_values_knn[1], X_training.columns)
+model_choice = st.sidebar.selectbox("Escolha o modelo", ["RandomForest", "DecisionTree", "KNN"])
 
-# Função para plotar a importância usando Plotly
-def plot_feature_importance_plotly(importance_df, model_name):
-    fig = px.bar(importance_df, x='importance', y='feature', orientation='h',
-                 title=f'Feature Importance - {model_name}', height=600)
-    fig.update_layout(yaxis={'categoryorder':'total ascending'})
-    fig.show()
+model_paths = {
+    'RandomForest': 'models/Random_Forest.pkl',
+    'DecisionTree': 'models/Decision_Tree.pkl',
+    'KNN': 'models/KNN.pkl'
+}
 
-# Plotando a importância das características para cada modelo
-plot_feature_importance_plotly(rf_importance_df, 'Random Forest')
-plot_feature_importance_plotly(dt_importance_df, 'Decision Tree')
-plot_feature_importance_plotly(knn_importance_df, 'KNN')
+if st.sidebar.button("Carregar Modelo e Gerar SHAP"):
+    model_path = model_paths[model_choice]
+    model = load_model(model_path)
+    plot_shap_beeswarm(model, X_test, model_choice)
+else:
+    st.write("Por favor, selecione um modelo para visualizar o gráfico SHAP.")
